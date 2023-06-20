@@ -13,8 +13,11 @@ public class Finding {
   private String description;
   private String fingerprint;
   private Severity severity;
+
   private String path;
   private Integer line;
+
+  private Integer endLine;
 
   public String getDescription() {
     return description;
@@ -54,6 +57,14 @@ public class Finding {
 
   public void setLine(Integer line) {
     this.line = line;
+  }
+
+  public Integer getEndLine() {
+    return endLine;
+  }
+
+  public void setEndLine(Integer endLine) {
+    this.endLine = endLine;
   }
 
 }

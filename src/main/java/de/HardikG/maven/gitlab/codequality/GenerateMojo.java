@@ -35,6 +35,9 @@ public class GenerateMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.directory}/gl-code-quality-report.json")
   public File outputFile;
 
+  @Parameter(defaultValue = "${project.build.directory}/gl-code-quality-effectiveErrorCount.txt")
+  public File outputScoreFile;
+
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
 
@@ -65,10 +68,15 @@ public class GenerateMojo extends AbstractMojo {
 
     // Create GitLab report
     if (findings.size() > 0) {
-      try (FileOutputStream stream = new FileOutputStream(outputFile)) {
-        new ReportSerializer().write(findings, stream);
-        log.info("GitLab code quality report for {} issue created: {}",
-            findings.size(), outputFile);
+      try {
+        FileOutputStream stream = new FileOutputStream(outputFile);
+        FileOutputStream scoreStream = new FileOutputStream(outputScoreFile);
+
+        double effectiveErrors=new ReportSerializer().write(findings, stream);
+        ScoreWriter.write(effectiveErrors, scoreStream);
+
+        log.info("GitLab code quality report for {} issue created: {}" ,
+                findings.size(), outputFile);
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
@@ -96,7 +104,6 @@ public class GenerateMojo extends AbstractMojo {
         } catch (IOException e) {
           throw new MojoFailureException("IO error", e);
         }
-
       } else {
         log.info("{} report not found: {}", provider.getName(), file);
       }

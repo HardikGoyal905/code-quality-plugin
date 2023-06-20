@@ -68,6 +68,7 @@ public class CheckstyleFindingProvider implements FindingProvider {
     finding.setSeverity(getSeverity(errorType.getSeverity()));
     finding.setPath(getRepositoryRelativePath(fileType));
     finding.setLine(getLineNumber(errorType));
+    finding.setEndLine(getLineNumber(errorType));
     return finding;
 
   }
@@ -80,7 +81,7 @@ public class CheckstyleFindingProvider implements FindingProvider {
   private Finding.Severity getSeverity(String severity) {
     switch (severity) {
       case "error":
-        return Finding.Severity.MAJOR;
+        return Finding.Severity.CRITICAL;
       case "warning":
         return Finding.Severity.MINOR;
       case "info":

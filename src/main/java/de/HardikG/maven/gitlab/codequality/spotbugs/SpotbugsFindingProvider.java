@@ -62,6 +62,8 @@ public class SpotbugsFindingProvider implements FindingProvider {
     finding.setSeverity(getSeverity(bugInstance.getPriority()));
     finding.setPath(sourcePosition.map(this::getRepositoryRelativePath).orElse("ERROR"));
     finding.setLine(sourcePosition.map(SourcePosition::getLine).orElse(1));
+    finding.setEndLine(sourcePosition.map(SourcePosition::getEndLine).orElse(1));
+
     return finding;
 
   }
@@ -99,7 +101,8 @@ public class SpotbugsFindingProvider implements FindingProvider {
         .findFirst()
         .map(sourceLine -> new SourcePosition(
             sourceLine.getSourcepath(),
-            sourceLine.getStart() != null ? sourceLine.getStart() : 1
+            sourceLine.getStart() != null ? sourceLine.getStart() : 1,
+            sourceLine.getEnd() != null ? sourceLine.getEnd() : 1
         ));
 
   }
@@ -124,9 +127,12 @@ public class SpotbugsFindingProvider implements FindingProvider {
     private final String sourcePath;
     private final int line;
 
-    public SourcePosition(String sourcePath, int line) {
+    private final int endLine;
+
+    public SourcePosition(String sourcePath, int line, int endLine) {
       this.sourcePath = sourcePath;
       this.line = line;
+      this.endLine = endLine;
     }
 
     public String getSourcePath() {
@@ -136,6 +142,8 @@ public class SpotbugsFindingProvider implements FindingProvider {
     public int getLine() {
       return line;
     }
+
+    public int getEndLine() { return endLine; }
 
   }
 

@@ -6,12 +6,21 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class ReportSerializer {
 
-  public void write(List<Finding> findings, OutputStream outputStream) throws IOException {
+  private double effectiveErrors=0.0;
+
+  public double write(List<Finding> findings, OutputStream outputStream) throws IOException {
+    HashMap<Finding.Severity, Double> errorType=new HashMap<Finding.Severity, Double>();
+    errorType.put(Finding.Severity.INFO, 0.0);
+    errorType.put(Finding.Severity.MINOR, 0.1);
+    errorType.put(Finding.Severity.MAJOR, 0.5);
+    errorType.put(Finding.Severity.CRITICAL, 1.0);
+
 
     try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
 
@@ -29,6 +38,7 @@ public class ReportSerializer {
         jsonWriter.name("fingerprint").value(finding.getFingerprint());
 
         if (finding.getSeverity() != null) {
+          effectiveErrors+=errorType.get(finding.getSeverity());
           jsonWriter.name("severity").value(finding.getSeverity().name().toLowerCase(Locale.ROOT));
         }
 
@@ -48,7 +58,9 @@ public class ReportSerializer {
       }
       jsonWriter.endArray();
 
+      writer.write(Double.toString(effectiveErrors));
     }
 
+    return effectiveErrors;
   }
 }
