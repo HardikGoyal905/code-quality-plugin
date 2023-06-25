@@ -60,10 +60,10 @@ public class GenerateMojo extends AbstractMojo {
 
     // Run Checkstyle provider
     findings.addAll(executeProvider(
-        new CheckstyleFindingProvider(repositoryRoot),
-        checkstyleEnabled,
-        checkstyleInputFile,
-        log
+            new CheckstyleFindingProvider(repositoryRoot),
+            checkstyleEnabled,
+            checkstyleInputFile,
+            log
     ));
 
     // Create GitLab report

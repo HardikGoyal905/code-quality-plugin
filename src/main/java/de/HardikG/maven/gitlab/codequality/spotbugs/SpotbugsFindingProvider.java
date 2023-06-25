@@ -71,10 +71,14 @@ public class SpotbugsFindingProvider implements FindingProvider {
   private String getRepositoryRelativePath(SourcePosition sourcePosition) {
 
     Path absolutePath = getAbsolutePath(sourcePosition.getSourcePath()).orElse(null);
+    System.out.println("SPOSG"+sourcePosition.getSourcePath());
     if (absolutePath == null) {
       log.warn("Unable to find file for path: {}", sourcePosition.getSourcePath());
       return sourcePosition.getSourcePath();
     }
+
+//    System.out.println("Spotbugs"+absolutePath+repositoryRoot);
+//    System.out.println(repositoryRoot.toPath().relativize(absolutePath).toString());
 
     return repositoryRoot.toPath().relativize(absolutePath).toString();
 
@@ -89,8 +93,6 @@ public class SpotbugsFindingProvider implements FindingProvider {
       }
     }
     return Optional.empty();
-
-
   }
 
   private Optional<SourcePosition> getSourcePosition(BugInstance bugInstance) {

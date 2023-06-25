@@ -45,11 +45,11 @@ public class CheckstyleFindingProvider implements FindingProvider {
       JAXBContext jaxbContext = JAXBContext.newInstance(CheckstyleType.class);
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
       JAXBElement<CheckstyleType> checkstyleType =
-          unmarshaller.unmarshal(xmlStreamReader, CheckstyleType.class);
+              unmarshaller.unmarshal(xmlStreamReader, CheckstyleType.class);
 
       return checkstyleType.getValue().getFile().stream()
-          .flatMap(this::transformFileType)
-          .collect(Collectors.toList());
+              .flatMap(this::transformFileType)
+              .collect(Collectors.toList());
 
     } catch (JAXBException | XMLStreamException e) {
       throw new IllegalStateException(e);
@@ -69,12 +69,26 @@ public class CheckstyleFindingProvider implements FindingProvider {
     finding.setPath(getRepositoryRelativePath(fileType));
     finding.setLine(getLineNumber(errorType));
     finding.setEndLine(getLineNumber(errorType));
+
     return finding;
 
   }
 
+  // TODO: Change it before deployment
   private String getRepositoryRelativePath(FileType fileType) {
-    Path absolutePath = Path.of(fileType.getName());
+//    String fileName=fileType.getName();
+//    String prefix="/builds/HardikGoyal/checkstyle";
+//    String modifiedPrefix="/Users/hardikgoyal/IdeaProjects/CheckStyle";
+//    String suffix= fileName.substring(prefix.length());
+//    fileName=modifiedPrefix+suffix;
+//
+//    Path absolutePath = Path.of(fileName);
+
+      Path absolutePath = Path.of(fileType.getName());
+
+//
+//    System.out.println("Checkstyle"+absolutePath+repositoryRoot);
+//    System.out.println(repositoryRoot.toPath().relativize(absolutePath).toString());
     return repositoryRoot.toPath().relativize(absolutePath).toString();
   }
 
@@ -106,10 +120,10 @@ public class CheckstyleFindingProvider implements FindingProvider {
        *   - line number (will change if code is added/removed above or below the finding)
        */
       String key = String.format("%s:%s:%s:%s",
-          getRepositoryRelativePath(fileType),
-          errorType.getSeverity(),
-          errorType.getMessage(),
-          errorType.getColumn()
+              getRepositoryRelativePath(fileType),
+              errorType.getSeverity(),
+              errorType.getMessage(),
+              errorType.getColumn()
       );
 
       MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -126,8 +140,8 @@ public class CheckstyleFindingProvider implements FindingProvider {
 
   private static Integer getLineNumber(ErrorType errorType) {
     return errorType.getLine() != null && errorType.getLine().matches("\\d+")
-        ? Integer.parseInt(errorType.getLine())
-        : 1;
+            ? Integer.parseInt(errorType.getLine())
+            : 1;
   }
 
 }
