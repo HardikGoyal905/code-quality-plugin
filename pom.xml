@@ -4,7 +4,7 @@
 
   <groupId>de.HardikG.maven</groupId>
   <artifactId>code-quality-plugin</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>code-quality-plugin Maven Plugin</name>

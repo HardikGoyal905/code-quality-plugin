@@ -41,6 +41,7 @@ public class GenerateMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
 
+
   public void execute() throws MojoFailureException {
 
     Logger log = new Logger(getLog());

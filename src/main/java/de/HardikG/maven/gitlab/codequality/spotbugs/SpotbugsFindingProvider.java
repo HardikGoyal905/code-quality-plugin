@@ -8,6 +8,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
@@ -37,9 +38,16 @@ public class SpotbugsFindingProvider implements FindingProvider {
 
     try {
 
-      JAXBContext jaxbContext = JAXBContext.newInstance(BugCollection.class);
-      Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-      BugCollection bugCollection = (BugCollection) unmarshaller.unmarshal(stream);
+      BugCollection bugCollection;
+
+      if(stream.available() > 0) {
+        JAXBContext jaxbContext = JAXBContext.newInstance(BugCollection.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        bugCollection = (BugCollection) unmarshaller.unmarshal(stream);
+      }
+      else{
+        bugCollection = new BugCollection();
+      }
 
       return bugCollection.getBugInstance().stream()
           .map(this::transformBugInstance)
@@ -47,6 +55,8 @@ public class SpotbugsFindingProvider implements FindingProvider {
 
     } catch (JAXBException e) {
       throw new IllegalStateException(e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
 
   }
@@ -71,7 +81,6 @@ public class SpotbugsFindingProvider implements FindingProvider {
   private String getRepositoryRelativePath(SourcePosition sourcePosition) {
 
     Path absolutePath = getAbsolutePath(sourcePosition.getSourcePath()).orElse(null);
-    System.out.println("SPOSG"+sourcePosition.getSourcePath());
     if (absolutePath == null) {
       log.warn("Unable to find file for path: {}", sourcePosition.getSourcePath());
       return sourcePosition.getSourcePath();

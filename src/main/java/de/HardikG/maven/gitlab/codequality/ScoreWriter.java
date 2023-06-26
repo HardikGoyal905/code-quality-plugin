@@ -11,10 +11,15 @@ public class ScoreWriter {
         try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)){
             int diffValue=DiffFileProcess.readDiffValue();
 
-            double score=((diffValue-effectiveErrors)/diffValue)*100;
-            writer.write("The Score is: " + Double.toString(score)+"%\n");
-            writer.write("The number of Lines Changed is: " + Integer.toString(diffValue) + "\n");
-            writer.write(Double.toString(effectiveErrors)+ " Numbers of Effective Errors");
+            if(effectiveErrors<0.1){
+                writer.write("Congratulations! You have Full Score\n The Number of Lines Changed: "+ diffValue);
+            }
+            else{
+                double score=diffValue/effectiveErrors;
+                writer.write("The Score is: " + Double.toString(score)+"\n");
+                writer.write("The number of Lines Changed is: " + Integer.toString(diffValue) + "\n");
+                writer.write(Double.toString(effectiveErrors)+ " Numbers of Effective Errors");
+            }
         }
     }
 }

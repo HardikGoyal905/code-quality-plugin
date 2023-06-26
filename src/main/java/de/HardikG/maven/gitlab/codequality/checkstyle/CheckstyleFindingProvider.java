@@ -76,15 +76,15 @@ public class CheckstyleFindingProvider implements FindingProvider {
 
   // TODO: Change it before deployment
   private String getRepositoryRelativePath(FileType fileType) {
-//    String fileName=fileType.getName();
-//    String prefix="/builds/HardikGoyal/checkstyle";
-//    String modifiedPrefix="/Users/hardikgoyal/IdeaProjects/CheckStyle";
-//    String suffix= fileName.substring(prefix.length());
-//    fileName=modifiedPrefix+suffix;
-//
-//    Path absolutePath = Path.of(fileName);
+    String fileName=fileType.getName();
+    String prefix="/builds/HardikGoyal/checkstyle";
+    String modifiedPrefix="/Users/hardikgoyal/IdeaProjects/CheckStyle";
+    String suffix= fileName.substring(prefix.length());
+    fileName=modifiedPrefix+suffix;
 
-      Path absolutePath = Path.of(fileType.getName());
+    Path absolutePath = Path.of(fileName);
+
+//      Path absolutePath = Path.of(fileType.getName());
 
 //
 //    System.out.println("Checkstyle"+absolutePath+repositoryRoot);
